@@ -1,0 +1,20 @@
+SQOOP import
+************
+
+su - hdoop
+cd hadoop-3.2.1/sbin
+./start-all.sh
+sqoop import --connect jdbc:mysql//localhost:3306/company --username user --password 06August! --table Employee --target-dir /home/sqoop
+
+    #company-name of database
+    #user- username of database
+    #06August!- password of database
+    #Employee- table name
+    #/home/sqoop -give target directory
+
+#TYPE FOLLOWING URL IN BROWSER
+     http://localhost:9870/
+
+     click on 'utilities' in the panel->click on 'browse the file system' ->Then you can see list of tables imported->
+     ->select the imported table by clicking on the target directory name in 'Name' column->download second file to view csv file
+

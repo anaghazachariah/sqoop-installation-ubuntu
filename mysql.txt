@@ -1,0 +1,63 @@
+Installing mysql
+**********
+
+sudo apt install mysql-server
+sudo mysql_secure_installation - set password
+#answers to questions from above command
+    would you like to setup validate password component? Y
+    enter password
+    do you wish to continue with the password provided? Y
+    Remove anonymous users?Y
+    Disallow root login remotely?N
+    remove test databases and access to it?N
+    reload privilage tables now?Y
+
+#to get mysql prompt
+sudo mysql -u root -p
+#enter password for mysql
+
+#to see databases
+SHOW DATABASES;
+
+#to create database named company
+CREATE DATABASE company;
+
+#to use database named company
+USE company
+
+#to create a table named Employee (Because we selected company database,company will contain the table)
+
+
+    CREATE TABLE Employee(  
+        EmpId int,  
+        LastName varchar(255),  
+        FirstName varchar(255),  
+        Address varchar(255),  
+        City varchar(255)   
+    );  
+
+#to insert values
+
+
+    INSERT INTO Employee    (EmpId,LastName,FirstName,ADDRESS,City)VALUES (1, 'XYZ', 'ABC', 'India', 'Mumbai' ); 
+    INSERT INTO Employee (EmpId,LastName,FirstName,ADDRESS,City)VALUES (2, 'X', 'A', 'India', 'Pune' );
+
+#for creating a user name and password for database company(THIS STEP IS NECESSARY FOR SQOOP) (type the following command  in mysql prompt)
+
+    CREATE USER 'user'@'localhost' IDENTIFIED WITH mysql_native_password BY '06August!';
+
+    [ provide a username and password in the above command.In the above example user is username and 06August! is password]
+
+#giving permissions to user to access our company database (type the following commands  in mysql prompt)
+
+        GRANT ALL ON company.* TO 'user'@'localhost';
+        GRANT ALL ON company TO 'user'@'localhost';
+        FLUSH PRIVILEGES
+        GRANT ALL PRIVILEGES ON company.* TP 'user'@'localhost' WITH GRANT OPTION;
+
+
+
+
+
+
+
