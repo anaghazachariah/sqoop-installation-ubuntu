@@ -1,20 +1,63 @@
-SQOOP import
-************
 
+Before using sqoop
+--------------------------
 su - hdoop
 cd hadoop-3.2.1/sbin
 ./start-all.sh
-sqoop import --connect jdbc:mysql//localhost:3306/company --username user --password 06August! --table Employee --target-dir /home/sqoop
 
+
+After using sqoop
+-----------------
+#TYPE FOLLOWING URL IN BROWSER
+     http://localhost:9870/
+
+     click on 'utilities' in the panel->click on 'browse the file system' ->Then you can see list of tables imported->
+     ->select the imported table by clicking on the target directory name in 'Name' column->download second file to view csv file
+
+
+SQOOP import
+************
+--connect       : JDBC URL to database
+--username      : username for connecting to database
+--password      : password for connecting to database
+--table         : name of the table to transfer
+--target-dir    : specify  the  directory  on HDFS where Sqoop should import  data
+--where         : express condition
+--P             : hidden password
+--password-file : To  load  the  password from any specified file
+
+
+Consider example 
     #company-name of database
     #user- username of database
     #06August!- password of database
     #Employee- table name
     #/home/sqoop -give target directory
 
-#TYPE FOLLOWING URL IN BROWSER
-     http://localhost:9870/
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee           
+    #Sqoop will create a directory with the same name as the imported table inside your home directory on HDFS and import all data there.
 
-     click on 'utilities' in the panel->click on 'browse the file system' ->Then you can see list of tables imported->
-     ->select the imported table by clicking on the target directory name in 'Name' column->download second file to view csv file
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp
+    #Sqoop will create a directory with the same name as the imported table inside target directory on HDFS and import all data there.
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --warehouse-dir /home/sqoop
+    #We have to select only parent directory.Sqoop will create a directory with the same name as the table inside the parent directory and import data there.
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --warehouse-dir /home/sqoop --where "id"=1
+    #import table with entries which satisfies the condition(here "id" =1) 
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --P --table Employee --warehouse-dir /home/sqoop
+    #when we run the command,sqoop will ask for password.The password will not be displayed
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password-file my-sqoop-password --table Employee --warehouse-dir /home/sqoop
+    #when we run the command,it will  load  the  password from any specified file. you need to store the file inside your home directory and set the file’s permissions to 400
+
+
+
+
+$hadoop fs -cat /home/sqoop/part-m-*
+    #To view imported file.here /home/sqoop is the path of target-directory.Add /part-m-* to the path
+
+
+
 
