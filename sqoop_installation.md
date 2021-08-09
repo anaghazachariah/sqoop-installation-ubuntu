@@ -242,11 +242,13 @@ export HADOOP_MAPRED_HOME=/home/hdoop/hadoop-3.2.1
 
 cd $SQOOP_HOME/lib
 wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.21/mysql-connector-java-8.0.21.jar
+wget https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.jar
+wget https://repo1.maven.org/maven2/org/apache/avro/avro-mapred/1.8.1/avro-mapred-1.8.1.jar
 cd $SQOOP_HOME
 wget https://talend-update.talend.com/nexus/content/repositories/libraries/org/apache/sqoop/sqoop/1.4.7/sqoop-1.4.7.jar
 cp sqoop-1.4.7.jar bin/
-cd $SQOOP_HOME/lib
-wget https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.jar
+
+
 
 sqoop version #To check sqoop version
 -----------------------------------------------------------------------------------------------------------------------------------------------------

@@ -17,15 +17,24 @@ After using sqoop
 
 SQOOP import
 ************
---connect       : JDBC URL to database
---username      : username for connecting to database
---password      : password for connecting to database
---table         : name of the table to transfer
---target-dir    : specify  the  directory  on HDFS where Sqoop should import  data
---where         : express condition
---P             : hidden password
---password-file : To  load  the  password from any specified file
-
+--connect            : JDBC URL to database
+--username           : username for connecting to database
+--password           : password for connecting to database
+--table              : name of the table to transfer
+--target-dir         : specify  the  directory  on HDFS where Sqoop should import  data
+--warehouse-dir      : To specify parent directory
+--where              : express condition
+--P                  : hidden password
+--password-file      : To  load  the  password from any specified file
+--as-sequencefile    : To use SequenceFile file format 
+-as-avrodatafile     : To use avro file format 
+--compress           : To compress file
+--compression-codec  : To choose compression format
+--direct             : To speedup the transfer by using native utilities provided by the database vendor for  retrieving  data from the database server or moving data back
+--map-column-java    : To override the mapping
+---num-mappers       : To specify number of number of mappers
+--null-string        : To replace null value for text-based columns that are defined with type VARCHAR, CHAR, NCHAR, TEXT, and a few others
+--null-non-string    : To replace null value for all columns other than text-based columns 
 
 Consider example 
     #company-name of database
@@ -38,10 +47,10 @@ $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --pa
     #Sqoop will create a directory with the same name as the imported table inside your home directory on HDFS and import all data there.
 
 $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp
-    #Sqoop will create a directory with the same name as the imported table inside target directory on HDFS and import all data there.
+    #Sqoop will create a directory with the same name as the imported table inside target directory on HDFS and import all data there.Sqoop  will  reject  importing data when the final output directory already exists
 
 $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --warehouse-dir /home/sqoop
-    #We have to select only parent directory.Sqoop will create a directory with the same name as the table inside the parent directory and import data there.
+    #We have to select only parent directory.Sqoop will create a directory with the same name as the table inside the parent directory and import data there.Sqoop  will  reject  importing multiple tables with same name in the same parent directory
 
 $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --warehouse-dir /home/sqoop --where "id"=1
     #import table with entries which satisfies the condition(here "id" =1) 
@@ -52,12 +61,65 @@ $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --P 
 $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password-file my-sqoop-password --table Employee --warehouse-dir /home/sqoop
     #when we run the command,it will  load  the  password from any specified file. you need to store the file inside your home directory and set the file’s permissions to 400
 
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password-file /home/hdoop/sqoop.password --table Employee --target-dir /home/sqoop/emp
+    # load  the  password from  a given file and import data.Here the password is stored in /home/hdoop/sqoop.password
+    #use the following commands to create a file for storing password
+        
+        $echo -n "16August!" > "sqoop.password"                                 
+        $hadoop dfs -put sqoop.password /home/hdoop/sqoop.password      #storing the file inside  home directory 
+        $hadoop dfs -chown 400 /home/hdoop/sqoop.password               #set the file’s permissions to 400
+        $rm sqoop.password
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --as-sequencefile
+    # To import data into a sequence file format
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --as-avrodatafile
+    # To import data into avro file format
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --compress
+    #Decrease  the  overall  size  occupied  on  HDFS  by  using  compression  for generated files.By default output files will be compressed using the GZip codec, and all files will end up with a .gz extension.
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --compress --compression-codec org.apache.hadoop.io.compress.BZip2Codec
+    #Output files will be compressed using the  BZip2 codec, and all files will end up with a .bz2 extension.
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+    #Output files will be compressed using the  snappy codec, and all files will end up with a .snappy extension.
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --direct 
+    #To speed up data transfer
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --map-column-java salary=Float,age=String,address=String 
+    #Changes mapping of salary to float,age and address to string.
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --num-mappers 1
+    #Output files will be compressed using the  snappy codec, and all files will end up with a .snappy extension.
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --null-string '\\N'
+    #Replaces null values for text based data and import.Here null values are replaced by /N
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --null-non-string '\\N'
+    #Replaces null values for data other than text based data and import.Here null values are replaced by /N
 
 
+SQOOP import-all-tables
+************
+
+$sqoop import-all-tables --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --warehouse-dir /home/sqoop/emp 
+    #Import all tables from database.You can’t use the parameter --target-dir, as that would instruct Sqoop to import all tables into the same directory.
+
+$sqoop import-all-tables --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --exclude-tables manager,sales --warehouse-dir /home/sqoop/emp 
+    #Import all tables from database excluding specific tables.Here we are excluding manager and sales tables
+
+
+
+EXTRA INFO
+**********
 
 $hadoop fs -cat /home/sqoop/part-m-*
     #To view imported file.here /home/sqoop is the path of target-directory.Add /part-m-* to the path
 
+$hadoop fs -rm -R /home/hdoop/file1
+    #To delete hdoop file.Here /home/hdoop/file1 is the path of file to be deleted
 
 
 

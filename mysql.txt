@@ -56,9 +56,12 @@ USE company
         FLUSH PRIVILEGES
         GRANT ALL PRIVILEGES ON company.* TP 'user'@'localhost' WITH GRANT OPTION;
 
+#To delete a table(type the following commands  in mysql prompt)
 
+        DROP TABLE Employee
 
+#To delete a database(type the following commands  in mysql prompt)
 
-
+        DROP DATABASE company
 
 
