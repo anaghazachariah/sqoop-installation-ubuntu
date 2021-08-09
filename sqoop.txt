@@ -100,6 +100,15 @@ $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --pa
 $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --null-non-string '\\N'
     #Replaces null values for data other than text based data and import.Here null values are replaced by /N
 
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --incremental append --check-column id --last-value 1
+    #specify the column containing the row’s id with --check-column. the rows with value id greater than or equal to  --last-value for  -check-column will be selected.(initially we import a table with --check-column id --last-value 0.It will have all rows in the table .assume the table undergoes some addition of rows.we can import  those new rows to our old table by giving value of --check-column of last row in the already imported table as --last-value)
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --incremental lastmodified --check-column last_update_date --last-value "2013-05-22 01:01:01"
+    #The incremental mode lastmodified requires a column holding a date value containing information as to when each row was last updated. Sqoop will import only those rows that were updated after the last import. Any row that does not have a modified column, as specified in the --check-column parameter, won’t be imported.
+
+
+
+
 
 SQOOP import-all-tables
 ************

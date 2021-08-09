@@ -64,4 +64,22 @@ USE company
 
         DROP DATABASE company
 
+#create table with timestamp
+
+   CREATE TABLE `visits` (
+  `id` INTEGER UNSIGNED NOT NULL,
+  `city` VARCHAR(50),
+  `last_update_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY (`last_update_date`)
+);
+
+#add row with timestamp
+
+    INSERT INTO `visits`(`id`, `city`, `last_update_date`) VALUES(1, "Freemont", "1983-05-22 01:01:01");
+
+#to add a column last_modified to table emp and give current time
+
+    alter table emp add last_modified timestamp default now() on update now() ;
+
 
