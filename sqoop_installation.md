@@ -245,6 +245,8 @@ wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.21/mysql-conn
 wget https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.jar
 wget https://repo1.maven.org/maven2/org/apache/avro/avro-mapred/1.8.1/avro-mapred-1.8.1.jar
 cd $SQOOP_HOME
+wget http://www.java2s.com/Code/JarDownload/java-json/java-json.jar.zip
+unzip java-json.jar.zip
 wget https://talend-update.talend.com/nexus/content/repositories/libraries/org/apache/sqoop/sqoop/1.4.7/sqoop-1.4.7.jar
 cp sqoop-1.4.7.jar bin/
 

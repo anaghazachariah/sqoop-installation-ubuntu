@@ -45,16 +45,21 @@ USE company
 
 #for creating a user name and password for database company(THIS STEP IS NECESSARY FOR SQOOP) (type the following command  in mysql prompt)
 
-    CREATE USER 'user'@'localhost' IDENTIFIED WITH mysql_native_password BY '06August!';
+    CREATE USER 'user'@'localhost' IDENTIFIED WITH mysql_native_password BY '16August!';
 
     [ provide a username and password in the above command.In the above example user is username and 06August! is password]
 
-#giving permissions to user to access our company database (type the following commands  in mysql prompt)
+#giving permissions to user to access our company database (type the following commands  in mysql prompt)(THIS STEP IS NECESSARY FOR SQOOP) 
 
         GRANT ALL ON company.* TO 'user'@'localhost';
         GRANT ALL ON company TO 'user'@'localhost';
         FLUSH PRIVILEGES
         GRANT ALL PRIVILEGES ON company.* TP 'user'@'localhost' WITH GRANT OPTION;
+
+#select the database for incremental import.then type following command in mysql
+
+    CREATE TABLE SQOOP_ROOT (version INT, propname VARCHAR(128) NOT NULL,propval VARCHAR(256),CONSTRAINT SQOOP_ROOT_unq UNIQUE (version, propname));
+    INSERT INTO SQOOP_ROOT VALUES(NULL,sqoop.hsqldb.job.storage.version','0');
 
 #To delete a table(type the following commands  in mysql prompt)
 

@@ -58,9 +58,6 @@ $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --pa
 $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --P --table Employee --warehouse-dir /home/sqoop
     #when we run the command,sqoop will ask for password.The password will not be displayed
 
-$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password-file my-sqoop-password --table Employee --warehouse-dir /home/sqoop
-    #when we run the command,it will  load  the  password from any specified file. you need to store the file inside your home directory and set the file’s permissions to 400
-
 $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password-file /home/hdoop/sqoop.password --table Employee --target-dir /home/sqoop/emp
     # load  the  password from  a given file and import data.Here the password is stored in /home/hdoop/sqoop.password
     #use the following commands to create a file for storing password
@@ -105,6 +102,46 @@ $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --pa
 
 $sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --incremental lastmodified --check-column last_update_date --last-value "2013-05-22 01:01:01"
     #The incremental mode lastmodified requires a column holding a date value containing information as to when each row was last updated. Sqoop will import only those rows that were updated after the last import. Any row that does not have a modified column, as specified in the --check-column parameter, won’t be imported.
+
+$sqoop job --create visits -- import --connect jdbc:mysql://localhost:3306/zakku --username zakku --password 16August! --table employee --target-dir /home/sqoop/emp --incremental append --check-column id --last-value 1
+    #To preserve last imported value 
+    #Inorder to work job create sqoop-site.xml in sqoop-1.4.7/conf and add the following lines(if we are changing user or databse we have to change this file).Here visits is the job name
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+                    <configuration>
+                    <property>
+                        <name>sqoop.metastore.client.autoconnect.url</name>
+                        <value>jdbc:mysql://localhost:3306/zakku</value>
+                    </property>
+                    <property>
+                        <name>sqoop.metastore.client.autoconnect.username</name>
+                        <value>zakku</value>
+                    </property>
+                    <property>
+                        <name>sqoop.metastore.client.autoconnect.password</name>
+                        <value>16August!</value>
+                    </property>
+                    </configuration>
+    #To run job(no need to run previous command everytime to import job)
+            $sqoop job --exec visits
+
+$sqoop job --list
+    #To list all jobs
+
+$sqoop job --delete visits
+    #To delete jobs.Here visits getting deleted
+
+$sqoop job --show visits
+    #To see all jobs
+
+$sqoop job --create visits -- import --connect jdbc:mysql://localhost:3306/zakku --username zakku --password-file /home/hdoop/sqoop.password --table employee --target-dir /home/sqoop/emp --incremental append --check-column id --last-value 1
+    #to run sqoop job without password providing during execution
+
+#another way to run sqoop job without password providing during execution.add following lines in sqoop-site.xml in sqoop-1.4.7/conf
+                    <property>
+                    <name>sqoop.metastore.client.record.password</name>
+                    <value>true</value>
+                    </property>
 
 
 
