@@ -144,7 +144,8 @@ $sqoop job --create visits -- import --connect jdbc:mysql://localhost:3306/zakku
                     </property>
 
 
-
+$sqoop job --exec visits -- --verbose
+    #adding new parameter at runtime.here we add --verbose to visits.verbose is used to get more insight into what the job is doing
 
 
 SQOOP import-all-tables
