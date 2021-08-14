@@ -200,3 +200,6 @@ SQOOP EXPORT
     #assume the order of columns in myswl is id,fname,lname,city,county..but in hdoop it is country,city,fname,lname,id(check hadoop table). then sppecify order of hdoop using --columns.column names can be given with or without ""
  $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --columns country,city,fname,id  --export-dir /home/sqoop/emp 
     #update only given columns.we should give all columns until primary column(the order of column based on hadoop).we can remove unwanted columns after that
+
+ $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --input-null-string '\\N' --input-null-non-string '\\N'  --export-dir /home/sqoop/emp 
+    #to override null values.Specifically for text-based columns, defined as VARCHAR, CHAR, NCHAR, TEXT, and a few others, you can use the parameter --input-null-string. Independent of this parameter,  for  all  other  column  data  types  you  can  use  the  --input-null-non-string  parameter.
