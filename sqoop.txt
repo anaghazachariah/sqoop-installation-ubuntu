@@ -148,13 +148,14 @@ $sqoop job --exec visits -- --verbose
     #adding new parameter at runtime.here we add --verbose to visits.verbose is used to get more insight into what the job is doing
 
 
+
 SQOOP import-all-tables
 ************
 
-$sqoop import-all-tables --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --warehouse-dir /home/sqoop/emp 
+$sqoop import-all-tables --connect jdbc:mysql://localhost:3306/zakku --username zakku --password 16August! --warehouse-dir /home/sqoop/emp 
     #Import all tables from database.You can’t use the parameter --target-dir, as that would instruct Sqoop to import all tables into the same directory.
 
-$sqoop import-all-tables --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --exclude-tables manager,sales --warehouse-dir /home/sqoop/emp 
+$sqoop import-all-tables --connect jdbc:mysql://localhost:3306/zakku --username zakku --password 16August! --exclude-tables manager,sales --warehouse-dir /home/sqoop/emp 
     #Import all tables from database excluding specific tables.Here we are excluding manager and sales tables
 
 
@@ -168,5 +169,33 @@ $hadoop fs -cat /home/sqoop/part-m-*
 $hadoop fs -rm -R /home/hdoop/file1
     #To delete hdoop file.Here /home/hdoop/file1 is the path of file to be deleted
 
+SQOOP EXPORT
+**************
+ $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --export-dir /home/sqoop/emp 
+    #exporting hadoop table to mysql.Table name should be the destination table in mysql.Table should be existing(can be empty).--export-dir says about from which dir we have to export
+    #here we are exporting table stored in dir /home/sqoop/emp as cities table in mysql.To export table stores in /home/sqoop/emp and table  cities should have same attributes
 
+ $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --export-dir /home/sqoop/emp --batch
+    #Use batch mode for exporting hadoop table 
+
+ $sqoop export -Dsqoop.export.records.per.statement=10  --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --export-dir /home/sqoop/emp --batch
+    #sqoop.export.records.per.statement  to specifices the number of records that will be used in each insert statement.here we have 10 rows inside one single insert statement
+
+ $sqoop export -Dsqoop.export.statements.per.transaction=10  --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --export-dir /home/sqoop/emp --batch
+    #alue specified in sqoop.export.statements.per.transaction  determines  how  many  insert  statements  will  be issued  on  the  database  prior  to  committing  the  transaction  and  starting  a  new  one
+
+ $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --staging-table staging_cities --export-dir /home/sqoop/emp 
+    #staging table is used to first load data to a temporary table before making changes to the real table. The staging table name is specified via the --staging-table parameter.staging table should be existing and empty
+
+ $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --staging-table staging_cities --export-dir /home/sqoop/emp 
+    #--clear-staging-table is used to clear staging table before using
+
+ $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities  --export-dir /home/sqoop/emp --update-key id
+    #update any changed rows in msql table.here rows are identified by column id
+
+ $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities  --export-dir /home/sqoop/emp --update-key id --update-mode allowinsert
+    #update citites  according to /home/sqoop/emp  and inset new rows to cities if there is any in /home/sqoop/emp
+
+ $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --columns country,city --export-dir /home/sqoop/emp 
+    #update citites  according to /home/sqoop/emp  and inset new rows to cities if there is any in /home/sqoop/emp
 

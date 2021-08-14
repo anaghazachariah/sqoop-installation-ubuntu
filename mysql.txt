@@ -88,3 +88,6 @@ USE company
     alter table emp add last_modified timestamp default now() on update now() ;
 
 
+#updating table
+
+    UPDATE Customers SET ContactName = 'Alfred Schmidt', City= 'Frankfurt' WHERE CustomerID = 1;
