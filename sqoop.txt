@@ -203,3 +203,35 @@ SQOOP EXPORT
 
  $sqoop export --connect jdbc:mysql//localhost:3306/zakku --username zakku --password 16August! --table cities --input-null-string '\\N' --input-null-non-string '\\N'  --export-dir /home/sqoop/emp 
     #to override null values.Specifically for text-based columns, defined as VARCHAR, CHAR, NCHAR, TEXT, and a few others, you can use the parameter --input-null-string. Independent of this parameter,  for  all  other  column  data  types  you  can  use  the  --input-null-non-string  parameter.
+
+IMPORT DATA TO HIVE
+**********************
+
+enter the following commands
+$mv metastore_db metastore_db.tmp 
+$schematool -initSchema -dbType derby
+
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --hive-import
+    #Export mysql table directly to hive.if a table exists in hive the data get appended.If there is no table a new table gets created
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --hive-import --hive-overwrite
+    #Overwrites content of already existing table.If no table exists create a new table
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --hive-import --map-column-hive id=STRING,price=DECIMAL
+    # if you want to change the Hive type of column id to STRING and column price to DECIMAL use map-column-hive
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --hive-import  --hive-partition-key city --hive-partition-value "kochi"
+    #partition the table.here a separate partition is created with rows having city=kochy.value of --hive-partition-key should not be a column name in actual Employee.here city is partitioned column in partititoned table.
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --hive-import --hive-drop-import-delims
+    #remove all \n, \t, and \01 characters from all string-based columns
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --hive-import --hive-delims-replacement "SPECIAL"
+    #Replaces  all \n, \t, and \01 characters from all string-based columns using another string.Here SPECIAL
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --hive-import --null-string '\\N'
+    #Replaces null values for text based data and import.Here null values are replaced by /N
+
+$sqoop import --connect jdbc:mysql//localhost:3306/company --username zakku --password 16August! --table Employee --target-dir /home/sqoop/emp --hive-import --null-non-string '\\N'
+    #Replaces null values for data other than text based data and import.Here null values are replaced by /N
