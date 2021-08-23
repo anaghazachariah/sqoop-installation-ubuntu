@@ -1,0 +1,80 @@
+#To create database.(Throw an error if employee already exists)
+    CREATE DATABASE employee;
+
+#To create database.(no error even if employee already exists)
+    CREATE DATABASE IF NOT EXISTS employee;
+
+#To show all databases
+    SHOW DATABASES;
+
+#To show databases whose name satisfy given regular expression.In the given example we will get all databases whose name starts with h
+    SHOW DATABASES LIKE 'h.*';
+
+#To create database in a given location
+    CREATE DATABASE employee LOCATION '/home/hdoop/sqoop';
+
+#To create database with a escriptive comment
+    CREATE DATABASE employee COMMENT 'contains data';
+
+#To describe the database
+    DESCRIBE DATABASE employee
+
+#To describe the database providing adding information
+    DESCRIBE DATABASE EXTENDED employee
+
+#To use a database
+    USE employee
+
+#To show tables in given database
+    SHOW tables
+
+#To print the current database as part of the prompt
+    set hive.cli.print.current.db=true;
+
+#To remove the current database as part of the prompt
+    set hive.cli.print.current.db=false;
+
+#To delete a database if it doesnot contains tables
+    DROP DATABASE IF EXISTS employee;
+            or
+    DROP DATABASE IF EXISTS employee RESTRICT;
+
+#to drop a database if it contains tables. 
+    DROP DATABASE IF EXISTS financials CASCADE;
+
+#to add key-value pairs in the extended description associated with a database.we can give any key-value pairs separated by comma
+    ALTER DATABASE financials SET DBPROPERTIES ('edited-by' = 'Joe Dba','lol'='opo');
+
+#To create a table named employees in mydb directory(we can avoid using directory name if our working and target directory are same)location should be given before properties
+    CREATE TABLE IF NOT EXISTS mydb.employees ( name STRING COMMENT 'Employee name',salary FLOAT  COMMENT 'Employee salary',subordinates ARRAY<STRING> COMMENT 'Names of subordinates',deductions  MAP<STRING, FLOAT> COMMENT 'Keys are deductions names, values are percentages',address STRUCT<street:STRING, city:STRING, state:STRING, zip:INT> COMMENT 'Home address') COMMENT 'Description of the table' LOCATION '/user/hive/warehouse/mydb.db/employees' TBLPROPERTIES ('creator'='me', 'created_at'='2012-01-02 10:00:00', ...) ;
+
+#To copy the schema (but not the data) of an existing table employees in mydb directory to employee2 in mydb directory
+    CREATE TABLE IF NOT EXISTS mydb.employees2 LIKE mydb.employees;
+
+#To show tables in a different database
+    SHOW TABLES IN company;
+
+#To show tables whose name satisfy given regular expression
+    SHOW TABLES 'empl.*';
+
+#To describe table
+    DESCRIBE  mydb.employees;
+
+#To show details about the table
+    DESCRIBE EXTENDED mydb.employees;
+
+#To provide more readable but also more verbose description
+    DESCRIBE FORMATTED mydb.employees;
+
+#To get details of a column
+    DESCRIBE  mydb.employees city;
+        or
+    DESCRIBE EXTENDED  mydb.employees city;
+
+#To get additional details of a column
+    DESCRIBE FORMATTED  mydb.employees city;
+
+
+
+
+

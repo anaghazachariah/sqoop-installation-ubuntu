@@ -57,14 +57,3 @@ cp /home/hdoop/apache-hive-3.1.2-bin/lib/hive-common-3.1.2.jar /home/hdoop/sqoop
 #to  get hive prompt
 hive
 
-#to show databases
-    show databses
-
-#to use a database
-    use zakku;
-
-#to show tables in database
-    show tables;
-
-#to create table
-    create table emp1(id int);
