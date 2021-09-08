@@ -1,3 +1,11 @@
+#enter the following commands
+$mv metastore_db metastore_db.tmp 
+$schematool -initSchema -dbType derby
+
+#to  get hive prompt
+$hive
+
+
 #To create database.(Throw an error if employee already exists)
     CREATE DATABASE employee;
 
@@ -46,10 +54,13 @@
     ALTER DATABASE financials SET DBPROPERTIES ('edited-by' = 'Joe Dba','lol'='opo');
 
 #To create a table named employees in mydb directory(we can avoid using directory name if our working and target directory are same)location should be given before properties
-    CREATE TABLE IF NOT EXISTS mydb.employees ( name STRING COMMENT 'Employee name',salary FLOAT  COMMENT 'Employee salary',subordinates ARRAY<STRING> COMMENT 'Names of subordinates',deductions  MAP<STRING, FLOAT> COMMENT 'Keys are deductions names, values are percentages',address STRUCT<street:STRING, city:STRING, state:STRING, zip:INT> COMMENT 'Home address') COMMENT 'Description of the table' LOCATION '/user/hive/warehouse/mydb.db/employees' TBLPROPERTIES ('creator'='me', 'created_at'='2012-01-02 10:00:00', ...) ;
+    CREATE TABLE IF NOT EXISTS mydb.employees ( name STRING COMMENT 'Employee name',salary FLOAT  COMMENT 'Employee salary',subordinates ARRAY<STRING> COMMENT 'Names of subordinates',deductions  MAP<STRING, FLOAT> COMMENT 'Keys are deductions names, values are percentages',address STRUCT<street:STRING, city:STRING, state:STRING, zip:INT> COMMENT 'Home address') COMMENT 'Description of the table' LOCATION '/home/hdoop/employees' TBLPROPERTIES ('creator'='me', 'created_at'='2012-01-02 10:00:00', ...) ;
 
 #To copy the schema (but not the data) of an existing table employees in mydb directory to employee2 in mydb directory
     CREATE TABLE IF NOT EXISTS mydb.employees2 LIKE mydb.employees;
+
+#insert data to table
+    INSERT INTO TABLE employee3 VALUES ('Dikshant',1,'95')
 
 #To show tables in a different database
     SHOW TABLES IN company;
@@ -74,7 +85,20 @@
 #To get additional details of a column
     DESCRIBE FORMATTED  mydb.employees city;
 
+External Tables
+**************
+#assume '/data/stocks' is a hdfs directory with .csv files in it
+    CREATE EXTERNAL TABLE IF NOT EXISTS stocks (ex STRING,symbol STRING,ymd STRING,price_open FLOAT,price_high FLOAT,price_low FLOAT,price_close FLOAT,volume INT,price_adj_close FLOAT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '/data/stocks';
 
+#To create an hdfs directory /data/stocks and copy file1.csv from /data/file1.csv files to it
+    hdfs dfs -mkdir /data/stocks
+    hdfs dfs -put /data/file1.csv /data/stocks
+
+#To visualize conents of table
+    select * from /data/stocks
+
+#to copy an external table(here mydb.employees is extenral table) schema to another (here new table is mydb.employees3  )
+    CREATE EXTERNAL TABLE IF NOT EXISTS mydb.employees3 LIKE mydb.employees LOCATION '/path/to/data';
 
 
 
